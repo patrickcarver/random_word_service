@@ -1,18 +1,9 @@
 defmodule RandomWordService do
   @moduledoc """
-  Documentation for RandomWordService.
+  Provides a random word given part of speech, number, tense, etc.
   """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> RandomWordService.hello
-      :world
-
-  """
-  def hello do
-    :world
+  
+  def get_word(acronym) do
+    acronym
   end
 end
