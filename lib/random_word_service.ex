@@ -25,12 +25,16 @@ defmodule RandomWordService do
 
   defp load_file(file_name) when file_name == "verbs" do
     list = VerbListLoader.load_from_file(@text_dir <> file_name <> ".json")
-    Agent.update(@name, fn struct -> Map.put(struct, String.to_atom(file_name), list) end)
+    add_list(file_name, list)
   end
 
   defp load_file(file_name) do
     list = NonverbListLoader.load_from_file(@text_dir <> file_name <> ".txt")
-    Agent.update(@name, fn struct -> Map.put(struct, String.to_atom(file_name), list) end)
+    add_list(file_name, list)
+  end
+
+  defp add_list(key, list) do
+    Agent.update(@name, fn struct -> Map.put(struct, String.to_atom(key), list) end)
   end
 
   def get_word(acronym) do
