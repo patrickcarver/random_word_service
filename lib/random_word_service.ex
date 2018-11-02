@@ -2,15 +2,35 @@ defmodule RandomWordService do
   @moduledoc """
   Provides a random word given part of speech, number, tense, etc.
   """
-  @text_dir "../text_files/"
+
+  alias RandomWordService.{NonverbListLoader, VerbListLoader}
+
+  @text_dir "../../text_files/"
   @name __MODULE__
 
+  defstruct(adjectives: [], adverbs: [], nouns: [], verbs: [])
+
   def start_link do
-    Agent.start_link(fn -> %{} end, name: @name)
+    Agent.start_link(fn -> %@name{} end, name: @name)
   end
 
+  @doc """
+  ["nouns", "adjectives", "adverbs", "verbs"]  
+  """
   def load_from_files(file_names) do
-    
+    file_names
+    |> Stream.map(fn name -> Task.async(fn -> load_file(name) end) end)
+    |> Enum.map(&Task.await/1)
+  end
+
+  defp load_file(file_name) when file_name == "verbs" do
+    list = VerbListLoader.load_from_file(@text_dir <> file_name <> ".json")
+    Agent.update(@name, fn struct -> Map.put(struct, String.to_atom(file_name), list) end)
+  end
+
+  defp load_file(file_name) do
+    list = NonverbListLoader.load_from_file(@text_dir <> file_name <> ".txt")
+    Agent.update(@name, fn struct -> Map.put(struct, String.to_atom(file_name), list) end)
   end
 
   def get_word(acronym) do
