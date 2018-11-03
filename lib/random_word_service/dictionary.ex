@@ -6,6 +6,7 @@ defmodule RandomWordService.Dictionary do
   alias RandomWordService.ListLoader
 
   @text_dir "../../text_files/"
+  @nonverbs [:adjective, :adverb, :noun] 
   @name __MODULE__
 
   defstruct(adjectives: [], adverbs: [], nouns: [], verbs: [])
@@ -21,13 +22,34 @@ defmodule RandomWordService.Dictionary do
   def init() do
     {:ok, pid} = start_link()
     load_from_files()
-    
+
     {:ok, pid}
+  end
+
+  def get_random_word(%{part_of_speech: part}) when part in @nonverbs do
+    part
+    |> pluralize()
+    |> get_part_of_speech_list()
+    |> Enum.random()
+  end
+
+  def get_random_word(%{part_of_speech: part}) when part == :verb do
+    
   end
 
   def lists() do
     Agent.get(@name, fn struct -> struct end)
   end
+
+
+  defp get_part_of_speech_list(key) do
+    {:ok, list} = Agent.get(@name, fn struct -> Map.fetch(struct, key)  end)
+    list
+  end  
+
+  defp pluralize(part_of_speech) do
+    Atom.to_string(part_of_speech) <> "s" |> String.to_atom()  
+  end  
 
   defp do_load_from_files(file_names) do
     file_names

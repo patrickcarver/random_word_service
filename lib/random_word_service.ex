@@ -11,8 +11,6 @@ defmodule RandomWordService do
 
   def get_word(acronym) do
     acronym
-
-
   end
 
 end
