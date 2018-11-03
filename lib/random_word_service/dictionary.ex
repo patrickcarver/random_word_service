@@ -34,13 +34,21 @@ defmodule RandomWordService.Dictionary do
   end
 
   def get_random_word(%{part_of_speech: part}) when part == :verb do
-    
+    part
+    |> pluralize()
+    |> get_part_of_speech_list()
+    |> Enum.random()
+    |> random_tense()    
   end
 
   def lists() do
     Agent.get(@name, fn struct -> struct end)
   end
 
+  defp random_tense(map) do
+    tense = Enum.random([:past, :present])
+    map[tense]
+  end
 
   defp get_part_of_speech_list(key) do
     {:ok, list} = Agent.get(@name, fn struct -> Map.fetch(struct, key)  end)
