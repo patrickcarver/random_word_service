@@ -23,6 +23,10 @@ defmodule RandomWordService do
     |> Enum.map(&Task.await/1)
   end
 
+  def lists() do
+    Agent.get(@name, fn struct -> struct end)
+  end
+
   defp load_file(file_name) when file_name == "verbs" do
     list = VerbListLoader.load_from_file(@text_dir <> file_name <> ".json")
     add_list(file_name, list)
