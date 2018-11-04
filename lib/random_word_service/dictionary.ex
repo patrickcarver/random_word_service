@@ -11,14 +11,6 @@ defmodule RandomWordService.Dictionary do
 
   defstruct(adjectives: [], adverbs: [], nouns: [], verbs: [])
   
-  def start_link() do
-    Agent.start_link(fn -> %@name{} end, name: @name)
-  end
-
-  def load_from_files() do
-    do_load_from_files(["adjectives", "adverbs", "nouns", "verbs"])
-  end
-
   def init() do
     {:ok, pid} = start_link()
     load_from_files()
@@ -26,7 +18,7 @@ defmodule RandomWordService.Dictionary do
     {:ok, pid}
   end
 
-  def get_random_word(part_of_speech) do
+  def get_random_word(part_of_speech) when part_of_speech in @parts_of_speech do
     word = part_of_speech
            |> pluralize()
            |> get_part_of_speech_list()
@@ -41,6 +33,16 @@ defmodule RandomWordService.Dictionary do
 
   def lists() do
     Agent.get(@name, fn struct -> struct end)
+  end
+
+
+
+  defp start_link() do
+    Agent.start_link(fn -> %@name{} end, name: @name)
+  end
+
+  defp load_from_files() do
+    do_load_from_files(["adjectives", "adverbs", "nouns", "verbs"])
   end
 
   defp get_part_of_speech_list(key) do
