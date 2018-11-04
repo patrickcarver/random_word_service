@@ -16,17 +16,18 @@ defmodule RandomWordService.Dictionary do
     {:ok, pid}
   end
 
-  def get_random_word(starts_with: starts_with, part_of_speech: part_of_speech) 
+  def get_random_word(starts_with: letter, part_of_speech: part_of_speech) 
     when part_of_speech in @parts_of_speech do
     word = part_of_speech
            |> pluralize()
            |> get_part_of_speech_list()
+           |> Enum.filter(fn word -> String.starts_with?(word, letter) end)
            |> Enum.random()
 
     {:ok, word}
   end
 
-  def get_random_word(starts_with: _starts_with, part_of_speech: invalid_part_of_speech) do
+  def get_random_word(starts_with: _letter, part_of_speech: invalid_part_of_speech) do
     {:error, "Sorry, but #{invalid_part_of_speech} is not in parts of speech list."}
   end
 
