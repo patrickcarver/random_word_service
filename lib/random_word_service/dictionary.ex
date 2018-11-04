@@ -6,7 +6,7 @@ defmodule RandomWordService.Dictionary do
   alias RandomWordService.ListLoader
 
   @text_dir "../../text_files/"
-  @nonverbs [:adjective, :adverb, :noun] 
+  @parts_of_speech [:adjective, :adverb, :noun, :verb] 
   @name __MODULE__
 
   defstruct(adjectives: [], adverbs: [], nouns: [], verbs: [])
@@ -26,28 +26,21 @@ defmodule RandomWordService.Dictionary do
     {:ok, pid}
   end
 
-  def get_random_word(%{part_of_speech: part}) when part in @nonverbs do
-    part
-    |> pluralize()
-    |> get_part_of_speech_list()
-    |> Enum.random()
+  def get_random_word(part_of_speech) do
+    word = part_of_speech
+           |> pluralize()
+           |> get_part_of_speech_list()
+           |> Enum.random()
+
+    {:ok, word}
   end
 
-  def get_random_word(%{part_of_speech: part}) when part == :verb do
-    part
-    |> pluralize()
-    |> get_part_of_speech_list()
-    |> Enum.random()
-    |> random_tense()    
+  def get_random_word(invalid_part_of_speech) do
+    {:error, "Sorry, but #{invalid_part_of_speech} is not in parts of speech list."}
   end
 
   def lists() do
     Agent.get(@name, fn struct -> struct end)
-  end
-
-  defp random_tense(map) do
-    tense = Enum.random([:past, :present])
-    map[tense]
   end
 
   defp get_part_of_speech_list(key) do
@@ -75,7 +68,7 @@ defmodule RandomWordService.Dictionary do
 
   defp do_load_file(file_name, extension) do
     %{path: @text_dir, name: file_name, extension: extension}
-    |> ListLoader.load_from_file
+    |> ListLoader.load_from_file()
     |> add_to_list_by_key(file_name)    
   end
 
