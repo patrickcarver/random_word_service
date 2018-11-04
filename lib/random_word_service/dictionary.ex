@@ -2,9 +2,7 @@ defmodule RandomWordService.Dictionary do
   @moduledoc """
   
   """
-
-  alias RandomWordService.ListLoader
-
+  
   @text_dir "../../text_files/"
   @parts_of_speech [:adjective, :adverb, :noun, :verb] 
   @name __MODULE__
@@ -60,18 +58,13 @@ defmodule RandomWordService.Dictionary do
     |> Enum.map(&Task.await/1)
   end
 
-  defp load_file(file_name) when file_name == "verbs" do
-    do_load_file(file_name, "json")
-  end
-
   defp load_file(file_name) do
-    do_load_file(file_name, "txt")
-  end
-
-  defp do_load_file(file_name, extension) do
-    %{path: @text_dir, name: file_name, extension: extension}
-    |> ListLoader.load_from_file()
-    |> add_to_list_by_key(file_name)    
+    @text_dir <> file_name <> ".txt"
+    |> Path.expand(__DIR__)
+    |> File.stream!()
+    |> Stream.map(&String.trim_trailing/1) 
+    |> Enum.to_list()
+    |> add_to_list_by_key(file_name)   
   end
 
   defp add_to_list_by_key(list, key) do
