@@ -7,7 +7,7 @@ defmodule RandomWordService do
   @parts_of_speech [:adjective, :adverb, :noun, :verb] 
   @name __MODULE__
 
-  defstruct(adjectives: [], adverbs: [], nouns: [], verbs: [])
+  defstruct(adjective: [], adverb: [], noun: [], verb: [])
   
   def init() do
     {:ok, pid} = start_link()
@@ -19,7 +19,6 @@ defmodule RandomWordService do
   def get_random_word(starts_with: letter, part_of_speech: part_of_speech) 
     when part_of_speech in @parts_of_speech do
     word = part_of_speech
-           |> pluralize()
            |> get_part_of_speech_list()
            |> Enum.filter(fn word -> String.starts_with?(word, letter) end)
            |> Enum.random()
@@ -41,21 +40,14 @@ defmodule RandomWordService do
     Agent.start_link(fn -> %@name{} end, name: @name)
   end
 
-  defp load_from_files() do
-    do_load_from_files(["adjectives", "adverbs", "nouns", "verbs"])
-  end
-
   defp get_part_of_speech_list(key) do
     {:ok, list} = Agent.get(@name, fn struct -> Map.fetch(struct, key)  end)
     list
   end  
 
-  defp pluralize(part_of_speech) do
-    Atom.to_string(part_of_speech) <> "s" |> String.to_atom()  
-  end  
-
-  defp do_load_from_files(file_names) do
-    file_names
+  defp load_from_files() do
+    @parts_of_speech
+    |> Enum.map(&Atom.to_string/1)
     |> Stream.map(fn name -> Task.async(fn -> load_file(name) end) end)
     |> Enum.map(&Task.await/1)
   end
