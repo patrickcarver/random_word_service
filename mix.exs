@@ -21,8 +21,7 @@ defmodule RandomWordService.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:inflex, "~> 1.10.0"},
-      {:verbs, "~> 0.5.4"}
+
     ]
   end
 end

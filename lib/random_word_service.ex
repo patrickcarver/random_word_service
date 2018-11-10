@@ -4,7 +4,7 @@ defmodule RandomWordService do
   """
 
   @text_dir "../text_files/"
-  @parts_of_speech [:adjective, :adverb, :noun, :verb] 
+  @parts_of_speech ["adjective", "adverb", "noun", "verb"] 
   @name __MODULE__
 
   defstruct(adjective: [], adverb: [], noun: [], verb: [])
@@ -47,7 +47,6 @@ defmodule RandomWordService do
 
   defp load_from_files() do
     @parts_of_speech
-    |> Enum.map(&Atom.to_string/1)
     |> Stream.map(fn name -> Task.async(fn -> load_file(name) end) end)
     |> Enum.map(&Task.await/1)
   end
@@ -62,6 +61,6 @@ defmodule RandomWordService do
   end
 
   defp add_to_list_by_key(list, key) do
-    Agent.update(@name, fn struct -> Map.put(struct, String.to_atom(key), list) end)
+    Agent.update(@name, fn struct -> Map.put(struct, key, list) end)
   end  
 end
