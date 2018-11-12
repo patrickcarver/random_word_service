@@ -3,7 +3,6 @@ defmodule RandomWordService do
   
   """
 
-  @text_dir "../text_files/"
   @parts_of_speech ["adjective", "adverb", "noun", "verb"] 
   @name __MODULE__
 
@@ -49,7 +48,7 @@ defmodule RandomWordService do
 
   defp load_file(file_name) do
     list = 
-      @text_dir <> file_name <> ".txt"
+      "../text_files/#{file_name}.txt"
       |> Path.expand(__DIR__)
       |> File.stream!()
       |> Stream.map(&String.trim_trailing/1) 
