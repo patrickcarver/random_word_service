@@ -3,6 +3,8 @@ defmodule RandomWordService do
   
   """
 
+  alias RandomWordService.Validators.Railway.StartsWith
+
   @parts_of_speech [:adjective, :adverb, :noun, :verb] 
   @name __MODULE__
 
@@ -12,25 +14,7 @@ defmodule RandomWordService do
     Agent.start_link(&load_from_files/0, name: @name)
   end
 
-  defp validate_starts_with(starts_with) do
-    # sanitize starts_with
-      # is sw a string?
-        # if so pass through
-          # does sw only contain English alphabetic characters?
-            # if so pass through
-               # set to lower case
-            # else throw error "must contain English alphabetic characters"
-        # else throw error "must be a string"
-    case is_binary(starts_with) do
-      true ->
-        case Regex.match?(~r/^[a-zA-Z]+$/, starts_with) do
-          true -> { :ok, String.downcase(starts_with) }
-          false -> { :error, "starts_with must contain English alphabetic characters"}
-        end
-      false -> 
-        { :error, "starts_with must be a string" }
-    end
-  end
+
 
   defp validate_part_of_speech(part_of_speech) do
     { :ok, part_of_speech }
@@ -38,7 +22,7 @@ defmodule RandomWordService do
 
   def get_random_word(starts_with: starts_with, part_of_speech: part_of_speech) do
 
-    with {:ok, validated_starts_with} <- validate_starts_with(starts_with),
+    with {:ok, validated_starts_with} <- StartsWith.validate(starts_with),
          {:ok, validated_part_of_speech} <- validate_part_of_speech(part_of_speech) 
     do
       do_random_word(validated_starts_with, validated_part_of_speech)
