@@ -9,7 +9,7 @@ defmodule RandomWordServiceTest do
   
   test "starts_with is an integer" do
     result = RandomWordService.get_random_word(starts_with: 1, part_of_speech: :adjective)
-    assert { :error, "Cannot use a non-string in starts_with" } == result
+    assert { :error, "starts_with must be a string" }== result
   end
 
   test "starts_with is an empty string" do
@@ -20,16 +20,6 @@ defmodule RandomWordServiceTest do
   test "part_of_speech is not valid" do
     result = RandomWordService.get_random_word(starts_with: "a", part_of_speech: :adjctiv)
     assert { :error, "Cannot find adjctiv in parts of speech list." } == result
-  end
-
-  test "part_of_speech is not used" do
-    result = RandomWordService.get_random_word(starts_with: "a")
-    assert { :error, "Cannot use invalid options" } == result
-  end
-
-  test "starts_with is not used" do
-    result = RandomWordService.get_random_word(part_of_speech: :adjective)
-    assert { :error, "Cannot use invalid options" } == result
   end
 
   test "invalid keyword stars_with passed in along with valid keyword part_of_speech" do
