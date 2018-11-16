@@ -8,13 +8,13 @@ defmodule RandomWordService.Validators.PartOfSpeech do
   """
   def validate(part_of_speech, allowed_list) do
     part_of_speech
-    |> ensure_value_is_atom()
+    |> convert_to_atom_if_needed()
     |> check_if_in(allowed_list)
   end
 
 
 
-  defp ensure_value_is_atom(part_of_speech) do
+  defp convert_to_atom_if_needed(part_of_speech) do
     case is_atom(part_of_speech) do
       true -> part_of_speech
       false -> part_of_speech |> to_string() |> String.to_atom()
