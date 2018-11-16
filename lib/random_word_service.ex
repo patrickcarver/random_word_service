@@ -3,7 +3,7 @@ defmodule RandomWordService do
   
   """
 
-  alias RandomWordService.Validators.Railway.StartsWith
+  alias RandomWordService.Validators.{StartsWith, PartOfSpeech}
 
   @parts_of_speech [:adjective, :adverb, :noun, :verb] 
   @name __MODULE__
