@@ -14,31 +14,14 @@ defmodule RandomWordService do
     Agent.start_link(&load_from_files/0, name: @name)
   end
 
-
-
-  defp validate_part_of_speech(part_of_speech) do
-    { :ok, part_of_speech }
-  end
-
   def get_random_word(starts_with: starts_with, part_of_speech: part_of_speech) do
-
-    with {:ok, validated_starts_with} <- StartsWith.validate(starts_with),
-         {:ok, validated_part_of_speech} <- validate_part_of_speech(part_of_speech) 
+    with { :ok, validated_starts_with } <- StartsWith.validate(starts_with),
+         { :ok, validated_part_of_speech } <- PartOfSpeech.validate(part_of_speech, @parts_of_speech) 
     do
       do_random_word(validated_starts_with, validated_part_of_speech)
     else
       err -> err       
     end
-   
-
-    # sanitize part_of_speech
-      # is pos an atom?
-        # if so pass through
-        # else is pos a string?
-          # if so convert to atom
-          # else is pos in @parts_of_speech?
-            # if so pass throw
-            # else throw error "not in parts_of_speech?"
   end
 
   def get_random_word(_) do
