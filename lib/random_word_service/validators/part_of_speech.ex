@@ -24,7 +24,7 @@ defmodule RandomWordService.Validators.PartOfSpeech do
   defp check_if_in(part_of_speech, allowed_list) do
     case part_of_speech in allowed_list do
       true -> { :ok, part_of_speech }
-      false -> { :error, "part_of_speech not in list of parts of speech" }
+      false -> { :error, "part_of_speech #{part_of_speech} not in list of parts of speech" }
     end
   end
 end

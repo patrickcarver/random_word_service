@@ -14,12 +14,12 @@ defmodule RandomWordServiceTest do
 
   test "starts_with is an empty string" do
     result = RandomWordService.get_random_word(starts_with: "", part_of_speech: :adjective) 
-    assert { :error, "Cannot use an empty string in starts_with" } == result   
+    assert { :error, "starts_with must contain only English alphabetic characters" } == result   
   end
 
   test "part_of_speech is not valid" do
     result = RandomWordService.get_random_word(starts_with: "a", part_of_speech: :adjctiv)
-    assert { :error, "Cannot find adjctiv in parts of speech list." } == result
+    assert { :error, "part_of_speech adjctiv not in list of parts of speech" } == result
   end
 
   test "invalid keyword stars_with passed in along with valid keyword part_of_speech" do
