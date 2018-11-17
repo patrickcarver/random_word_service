@@ -1,6 +1,6 @@
 # RandomWordService
 
-RandomWordService is an application that will return a random word given upto 2 parameters to the `get_random_word` function.
+RandomWordService is an application that will return a random word given up to 2 parameters to the `get_random_word` function.
 
 ## Usage
 
@@ -12,9 +12,9 @@ Use the `get_random_word` function to get a random word. The function returns an
 
 The are up to two parameters that can be used:
 
-`starts_with`: A string that the random word needs to start with. Only English letters are valid. Capitalization of the string does not matter.
+* `starts_with`: A string that the random word needs to start with. Only English letters are valid. Capitalization of the string does not matter.
 
-`part_of_speech`: A string or atom of the part of speech the word needs to be. Valid parts of speech are adjective, adverb, noun, or verb in string or verb format. 
+* `part_of_speech`: A string or atom of the part of speech the word needs to be. Valid parts of speech are adjective, adverb, noun, or verb in string or verb format. 
 
 Both parameters do not need to be used. Using only `starts_with` will return an adjective, adverb, noun, or verb starting with the specified string. Using only `part_of_speech` will return a word starting with any letter that is the specified part of speech. 
 
