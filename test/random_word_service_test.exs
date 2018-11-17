@@ -17,7 +17,7 @@ defmodule RandomWordServiceTest do
     assert { :error, "starts_with must contain only English alphabetic characters" } = result   
   end
 
-  test "part_of_speech is not valid" do
+  test "part_of_speech as atom is not valid" do
     result = RandomWordService.get_random_word(starts_with: "a", part_of_speech: :adjctiv)
     assert { :error, "part_of_speech adjctiv not in list of parts of speech" } = result
   end
@@ -32,6 +32,10 @@ defmodule RandomWordServiceTest do
     assert { :ok, _ } = result
   end
 
+  test "part_of_speech as string is not valid"  do
+    assert { :error, "part_of_speech adjctiv not in list of parts of speech" } =  RandomWordService.get_random_word(starts_with: "r", part_of_speech: "adjctiv")
+  end
+
   test "part_of_speech can be an atom in valid parts of speech" do
     result = RandomWordService.get_random_word(starts_with: "a", part_of_speech: :noun)
     assert { :ok, _ } = result    
@@ -43,8 +47,7 @@ defmodule RandomWordServiceTest do
   end
 
   test "part_of_speech is only parameter passed in" do
-    result = RandomWordService.get_random_word(part_of_speech: :adverb)
-    assert { :ok, _ } = result
+    assert { :ok, _ } = RandomWordService.get_random_word(part_of_speech: :adverb)
   end
 
   test "starts_with is only parameter passed in" do

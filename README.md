@@ -24,6 +24,39 @@ Also, `get_random_word` can be invoked without any parameters. It will randomly 
 
 There is a function called `list` that will return the struct of the parts of speech word lists.
 
+## Examples
+```elixir
+iex(1)> RandomWordService.get_random_word(starts_with: "r", part_of_speech: "adjective")
+{:ok, "resigned"}
+
+iex(2)> RandomWordService.get_random_word(starts_with: "r")
+{:ok, "repeatedly"}
+
+iex(3)> RandomWordService.get_random_word(part_of_speech: "adjective")
+{:ok, "relevant"}
+
+iex(4)> RandomWordService.get_random_word()
+{:ok, "all-out"}
+
+iex(5)> RandomWordService.get_random_word(starts_with: "rat", part_of_speech: "adjective")
+{:ok, "rational"}
+
+iex(6)> RandomWordService.get_random_word(starts_with: "rrr", part_of_speech: "adjective")
+{:error, "starts_with rrr not found"}
+
+iex(7)> RandomWordService.get_random_word(stars_wth: "r", part_of_speech: "adjective")
+{:error, "Cannot use invalid options"}
+
+iex(8)> RandomWordService.get_random_word(starts_with: "r", part_of_speech: :adjctiv)
+{:error, "part_of_speech adjctiv not in list of parts of speech"}
+
+iex(9)> RandomWordService.get_random_word(starts_with: 1, part_of_speech: :adjective)
+{:error, "starts_with must be a string"}
+
+iex(10)> RandomWordService.get_random_word(starts_with: "10", part_of_speech: :adjective)
+{:error, "starts_with must contain only English alphabetic characters"}
+```
+
 ## Installation
 
 The package can be installed by adding `random_word_service` 

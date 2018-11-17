@@ -5,13 +5,12 @@ defmodule RandomWordService.Validators.StartsWithTest do
   alias RandomWordService.Validators.StartsWith
 
   test "starts_with is a string but with numbers in it" do
-    error = { :error, "starts_with must contain only English alphabetic characters" } 
-    assert error = StartsWith.validate("a1")
+    assert { :error, "starts_with must contain only English alphabetic characters" } = 
+      StartsWith.validate("a1")
   end
 
   test "starts_with is an integer" do
-    error = { :error, "starts_with must be a string" }
-    assert error = StartsWith.validate(1) 
+    assert { :error, "starts_with must be a string" } = StartsWith.validate(1) 
   end
 
   test "starts_with is a lower case string" do

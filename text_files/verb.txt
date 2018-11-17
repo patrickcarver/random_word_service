@@ -627,7 +627,9 @@ wreck
 wrestle
 wriggle
 x-ray
+xerox
 yawn
 yell
 zip
 zoom
+zest

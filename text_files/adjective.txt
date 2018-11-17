@@ -4940,3 +4940,7 @@ ill-fitting
 scaly
 unpainted
 eroding
+xenophobic
+zany
+zestful
+xanthous
