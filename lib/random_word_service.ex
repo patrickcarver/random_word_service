@@ -29,33 +29,34 @@ defmodule RandomWordService do
   end
 
   defp do_random_word(starts_with, part_of_speech) do
-    word = part_of_speech
-            |> get_part_of_speech_list()
-            |> find_words_starting_with(starts_with)
-            |> return_filter_result(starts_with)
-    { :ok, word }    
+    { starts_with, part_of_speech }
+    |> get_part_of_speech_list()
+    |> find_words_starting_with()
+    |> pick_random_word()
   end
 
   def lists() do
     Agent.get(@name, fn struct -> struct end)
   end
 
-  defp find_words_starting_with(list, starts_with) do
-    Enum.filter(list, &(String.starts_with?(&1, starts_with)))
+  defp get_part_of_speech_list({ starts_with, part_of_speech }) do
+    { :ok, list } = Agent.get(@name, fn struct -> Map.fetch(struct, part_of_speech) end)
+    { starts_with, part_of_speech, list }
+  end  
+
+  defp find_words_starting_with({ starts_with, part_of_speech, list }) do
+    filtered_list = Enum.filter(list, &(String.starts_with?(&1, starts_with)))
+    { starts_with, part_of_speech, filtered_list }
   end
 
-  defp return_filter_result([], starts_with) do
+  defp pick_random_word({ starts_with, _, []}) do
     { :error, "starts_with #{starts_with} not found"} 
   end
 
-  defp return_filter_result(list, _) do
-    Enum.random(list)
+  defp pick_random_word({ _, _, list }) do
+    word = Enum.random(list)
+    { :ok, word }
   end
-
-  defp get_part_of_speech_list(part_of_speech) do
-    Agent.get(@name, fn struct -> Map.fetch(struct, part_of_speech) end)
-    |> elem(1)
-  end  
 
   defp load_from_files() do
     @parts_of_speech
