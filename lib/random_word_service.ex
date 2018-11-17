@@ -12,7 +12,7 @@ defmodule RandomWordService do
   defstruct(adjective: [], adverb: [], noun: [], verb: [])
 
   @doc """
-  Function t o
+  Start of the process
   """
   def start_link() do
     Agent.start_link(&load_from_files/0, name: @name)
@@ -70,7 +70,7 @@ defmodule RandomWordService do
     Agent.get(@name, fn struct -> struct end)
   end
 
-
+  # Private functions
 
   defp do_random_word(starts_with, part_of_speech) do
     { starts_with, part_of_speech }

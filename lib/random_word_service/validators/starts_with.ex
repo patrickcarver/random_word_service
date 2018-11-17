@@ -1,10 +1,12 @@
 defmodule RandomWordService.Validators.StartsWith do
   @moduledoc """
-
+  Checks if starts_with is a string of only English letters and makes it lowercase
   """
 
   @doc """
-  
+  Ensures starts_with is a string with only English letters and puts in it lower case.
+  Starts_with needs to be lower case because the word list has only lower case words
+  and an uppercase string will not match.
   """
   def validate(starts_with) do
     starts_with
@@ -13,7 +15,7 @@ defmodule RandomWordService.Validators.StartsWith do
     |> lowercase()
   end
 
-
+  # Private functions
 
   defp is_string(starts_with) do
     case is_binary(starts_with) do
