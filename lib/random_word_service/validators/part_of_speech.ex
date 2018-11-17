@@ -17,7 +17,7 @@ defmodule RandomWordService.Validators.PartOfSpeech do
   defp convert_to_atom_if_needed(part_of_speech) do
     case is_atom(part_of_speech) do
       true -> part_of_speech
-      false -> part_of_speech |> to_string() |> String.to_atom()
+      false -> part_of_speech |> to_string() |> String.to_existing_atom()
     end
   end
 
