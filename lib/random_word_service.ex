@@ -12,14 +12,16 @@ defmodule RandomWordService do
   defstruct(adjective: [], adverb: [], noun: [], verb: [])
 
   @doc """
-  
+  Function t o
   """
   def start_link() do
     Agent.start_link(&load_from_files/0, name: @name)
   end
 
   @doc """
-  Function that gets a random word startig
+  Gets a random word based on two parameters, starts_with is the string 
+  the word should start with and part_of_speech is the string or atom to select the word from
+  the lists of parts_of_speech 
   """
   def get_random_word(starts_with: starts_with, part_of_speech: part_of_speech) do
     with { :ok, validated_starts_with } <- StartsWith.validate(starts_with),
@@ -32,7 +34,8 @@ defmodule RandomWordService do
   end
 
   @doc """
-  Function that will 
+  Returns a random word that is a random part of speech starting with 
+  the starts_with string.
   """
   def get_random_word(starts_with: starts_with) do
     with { :ok, validated_starts_with } <- StartsWith.validate(starts_with) do
@@ -43,7 +46,7 @@ defmodule RandomWordService do
   end
 
   @doc """
-  
+  Returns a random word that is the specified part of speech that begins with any letter.
   """
   def get_random_word(part_of_speech: part_of_speech) do
     with { :ok, validated_part_of_speech } <- PartOfSpeech.validate(part_of_speech, @parts_of_speech) do
@@ -54,14 +57,14 @@ defmodule RandomWordService do
   end
 
   @doc """
-  Function to be a catch-all of invalid keyword list
+  Catches all invalid parameters
   """
   def get_random_word(_) do
     { :error, "Cannot use invalid options" }
   end
 
   @doc """
-  Function to output word list struct.
+  Outputs word list struct.
   """
   def lists() do
     Agent.get(@name, fn struct -> struct end)
@@ -86,7 +89,7 @@ defmodule RandomWordService do
     { starts_with, part_of_speech, filtered_list }
   end
 
-  defp pick_random_word({ starts_with, _, []}) do
+  defp pick_random_word({ starts_with, _, [] }) do
     { :error, "starts_with #{starts_with} not found"} 
   end
 
