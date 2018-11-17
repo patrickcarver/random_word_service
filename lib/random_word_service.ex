@@ -9,6 +9,8 @@ defmodule RandomWordService do
   @parts_of_speech [:adjective, :adverb, :noun, :verb] 
   @name __MODULE__
 
+  # Struct to hold the word lists by part of speech
+  # load_from_files function populates this
   defstruct(adjective: [], adverb: [], noun: [], verb: [])
 
   @doc """
@@ -39,7 +41,7 @@ defmodule RandomWordService do
   """
   def get_random_word(starts_with: starts_with) do
     with { :ok, validated_starts_with } <- StartsWith.validate(starts_with) do
-      get_random_starts_with(validated_starts_with)
+      do_random_word_by_starts_with(validated_starts_with)
     else
       err -> err     
     end
@@ -50,7 +52,7 @@ defmodule RandomWordService do
   """
   def get_random_word(part_of_speech: part_of_speech) do
     with { :ok, validated_part_of_speech } <- PartOfSpeech.validate(part_of_speech, @parts_of_speech) do
-      get_random_part_of_speech(validated_part_of_speech)
+      do_random_word_by_part_of_speech(validated_part_of_speech)
     else
       err -> err
     end
@@ -61,6 +63,15 @@ defmodule RandomWordService do
   """
   def get_random_word(_) do
     { :error, "Cannot use invalid options" }
+  end
+
+  @doc """
+  Returns a random word of any part of speech starting with any letter
+  """
+  def get_random_word() do
+    starts_with = get_random_letter()
+    part_of_speech = get_random_part_of_speech()
+    do_random_word(starts_with, part_of_speech)
   end
 
   @doc """
@@ -98,12 +109,12 @@ defmodule RandomWordService do
     { :ok, word }
   end
 
-  defp get_random_starts_with(starts_with) do
-    part_of_speech = Enum.random(@parts_of_speech)
+  defp do_random_word_by_starts_with(starts_with) do
+    part_of_speech = get_random_part_of_speech()
     do_random_word(starts_with, part_of_speech)    
   end
 
-  defp get_random_part_of_speech(part_of_speech) do
+  defp do_random_word_by_part_of_speech(part_of_speech) do
     starts_with = get_random_letter()
     do_random_word(starts_with, part_of_speech)
   end
@@ -114,16 +125,15 @@ defmodule RandomWordService do
     |> Enum.random()
   end
 
+  defp get_random_part_of_speech() do
+    Enum.random(@parts_of_speech)
+  end
+
   defp load_from_files() do
     @parts_of_speech
     |> Stream.map(fn name -> Task.async(fn -> load_file(name) end) end)
     |> Enum.map(&Task.await/1)
     |> convert_to_struct()
-  end
-
-  defp convert_to_struct(keyword_list) do
-    map = Enum.into(keyword_list, %{})
-    Map.merge(%@name{}, map)
   end
 
   defp load_file(file_name) do
@@ -136,4 +146,9 @@ defmodule RandomWordService do
 
     { file_name, list }  
   end
+
+  defp convert_to_struct(keyword_list) do
+    map = Enum.into(keyword_list, %{})
+    Map.merge(%@name{}, map)
+  end  
 end

@@ -51,4 +51,8 @@ defmodule RandomWordServiceTest do
     result = RandomWordService.get_random_word(starts_with: "g")
     assert { :ok, _ } = result
   end
+
+  test "no parameters" do
+    assert { :ok, _ } = RandomWordService.get_random_word()
+  end
 end
