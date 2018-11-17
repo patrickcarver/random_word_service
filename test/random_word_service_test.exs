@@ -36,4 +36,9 @@ defmodule RandomWordServiceTest do
     result = RandomWordService.get_random_word(starts_with: "a", part_of_speech: :noun)
     assert { :ok, word } = result    
   end
+
+  test "starts_with is a string not found" do
+    result = RandomWordService.get_random_word(starts_with: "asdf", part_of_speech: :noun)
+    assert { :error, "starts_with asdf not found"} = result
+  end
 end

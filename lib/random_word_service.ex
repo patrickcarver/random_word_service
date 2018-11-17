@@ -31,13 +31,25 @@ defmodule RandomWordService do
   defp do_random_word(starts_with, part_of_speech) do
     word = part_of_speech
             |> get_part_of_speech_list()
-            |> Enum.filter(&(String.starts_with?(&1, starts_with)))
-            |> Enum.random()
+            |> find_words_starting_with(starts_with)
+            |> return_filter_result(starts_with)
     { :ok, word }    
   end
 
   def lists() do
     Agent.get(@name, fn struct -> struct end)
+  end
+
+  defp find_words_starting_with(list, starts_with) do
+    Enum.filter(list, &(String.starts_with?(&1, starts_with)))
+  end
+
+  defp return_filter_result([], starts_with) do
+    { :error, "starts_with #{starts_with} not found"} 
+  end
+
+  defp return_filter_result(list, _) do
+    Enum.random(list)
   end
 
   defp get_part_of_speech_list(part_of_speech) do
