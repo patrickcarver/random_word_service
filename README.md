@@ -67,7 +67,7 @@ def deps do
   [
     { :random_word_service,
       git: "https://github.com/patrickcarver/random_word_service.git", 
-      tag: "v1.0" }
+      tag: "v1.0.1" }
   ]
 end
 ```
