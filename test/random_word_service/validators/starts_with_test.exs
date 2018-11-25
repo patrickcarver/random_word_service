@@ -12,12 +12,4 @@ defmodule RandomWordService.Validators.StartsWithTest do
   test "starts_with is an integer" do
     assert { :error, "starts_with must be a string" } = StartsWith.validate(1) 
   end
-
-  test "starts_with is a lower case string" do
-    assert {:ok, "a" } = StartsWith.validate("a")
-  end
-
-  test "starts_with is an upper case string" do
-    assert {:ok, "a" } = StartsWith.validate("A")
-  end
 end

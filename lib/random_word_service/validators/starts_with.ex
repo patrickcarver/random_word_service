@@ -12,7 +12,6 @@ defmodule RandomWordService.Validators.StartsWith do
     starts_with
     |> is_string()
     |> is_all_letters()
-    |> lowercase()
   end
 
   # Private functions
@@ -32,14 +31,6 @@ defmodule RandomWordService.Validators.StartsWith do
   end
 
   defp is_all_letters({ :error, message }) do
-    { :error, message }
-  end
-
-  defp lowercase({ :ok, starts_with }) do
-    {:ok, String.downcase(starts_with) }
-  end
-
-  defp lowercase({ :error, message }) do
     { :error, message }
   end
 end
