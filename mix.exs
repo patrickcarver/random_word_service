@@ -22,7 +22,7 @@ defmodule RandomWordService.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-
+      { :validatorex, git: "https://github.com/patrickcarver/validatorex.git", tag: "v0.2.0" }
     ]
   end
 end

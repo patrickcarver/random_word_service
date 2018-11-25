@@ -4,7 +4,7 @@ defmodule RandomWordService do
   and what part of speech it is.
   """
 
-  alias RandomWordService.Validators.{StartsWith, PartOfSpeech}
+  alias Validatorex
 
   @parts_of_speech ~w[adjective adverb noun verb] 
   @name __MODULE__
@@ -26,12 +26,13 @@ defmodule RandomWordService do
   the lists of parts_of_speech 
   """
   def get_random_word(starts_with: starts_with, part_of_speech: part_of_speech) do
-    with { :ok, validated_starts_with } <- StartsWith.validate(starts_with),
-         { :ok, validated_part_of_speech } <- PartOfSpeech.validate(part_of_speech, @parts_of_speech) 
+    with { :ok, validated_starts_with } <- Validatorex.only_english_letters(starts_with),
+         { :ok, validated_part_of_speech } <- Validatorex.value_in_list(part_of_speech, @parts_of_speech) 
     do
-      downcased_starts_with = validated_starts_with |> String.downcase()
-
-      do_random_word(downcased_starts_with, validated_part_of_speech)
+      # starts_with needs to be downcased to match words in lists
+      validated_starts_with 
+      |> String.downcase()
+      do_random_word(validated_part_of_speech)
     else
       err -> err       
     end
@@ -42,7 +43,7 @@ defmodule RandomWordService do
   the starts_with string.
   """
   def get_random_word(starts_with: starts_with) do
-    with { :ok, validated_starts_with } <- StartsWith.validate(starts_with) do
+    with { :ok, validated_starts_with } <- Validatorex.only_english_letters(starts_with) do
       validated_starts_with
       |> String.downcase()
       |> do_random_word_by_starts_with()
@@ -55,7 +56,7 @@ defmodule RandomWordService do
   Returns a random word that is the specified part of speech that begins with any letter.
   """
   def get_random_word(part_of_speech: part_of_speech) do
-    with { :ok, validated_part_of_speech } <- PartOfSpeech.validate(part_of_speech, @parts_of_speech) do
+    with { :ok, validated_part_of_speech } <- Validatorex.value_in_list(part_of_speech, @parts_of_speech) do
       validated_part_of_speech
       |> do_random_word_by_part_of_speech()
     else
@@ -100,6 +101,7 @@ defmodule RandomWordService do
   end
 
   defp get_part_of_speech_list({ starts_with, part_of_speech }) do
+    # part_of_speech is translated to an atom 
     { :ok, list } = Agent.get(@name, fn struct -> Map.fetch(struct, part_of_speech |> String.to_existing_atom) end)
     { starts_with, part_of_speech, list }
   end  

@@ -14,7 +14,7 @@ The are up to two parameters that can be used:
 
 * `starts_with`: A string that the random word needs to start with. Only English letters are valid. Capitalization of the string does not matter.
 
-* `part_of_speech`: A string or atom of the part of speech the word needs to be. Valid parts of speech are adjective, adverb, noun, or verb in string or verb format. 
+* `part_of_speech`: A string of the part of speech the word needs to be. Valid parts of speech are "adjective", "adverb", "noun", or "verb".
 
 Both parameters do not need to be used. Using only `starts_with` will return an adjective, adverb, noun, or verb starting with the specified string. Using only `part_of_speech` will return a word starting with any letter that is the specified part of speech. 
 
@@ -67,7 +67,7 @@ def deps do
   [
     { :random_word_service,
       git: "https://github.com/patrickcarver/random_word_service.git", 
-      tag: "v1.0.1" }
+      tag: "v1.0.2" }
   ]
 end
 ```
