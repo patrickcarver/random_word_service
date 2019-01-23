@@ -45,16 +45,16 @@ iex(6)> RandomWordService.get_random_word(starts_with: "rrr", part_of_speech: "a
 {:error, "starts_with rrr not found"}
 
 iex(7)> RandomWordService.get_random_word(stars_wth: "r", part_of_speech: "adjective")
-{:error, "Cannot use invalid options"}
+{:error, "cannot use invalid options"}
 
 iex(8)> RandomWordService.get_random_word(starts_with: "r", part_of_speech: :adjctiv)
-{:error, "part_of_speech adjctiv not in list of parts of speech"}
+{:error, "value is not in the list"}
 
 iex(9)> RandomWordService.get_random_word(starts_with: 1, part_of_speech: :adjective)
-{:error, "starts_with must be a string"}
+{:error, "value must be a string"}
 
 iex(10)> RandomWordService.get_random_word(starts_with: "10", part_of_speech: :adjective)
-{:error, "starts_with must contain only English alphabetic characters"}
+{:error, "value must contain only English alphabetic characters"}
 ```
 
 ## Installation

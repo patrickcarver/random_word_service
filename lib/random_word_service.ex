@@ -4,6 +4,8 @@ defmodule RandomWordService do
   and what part of speech it is.
   """
 
+  use Agent
+
   alias Validatorex
 
   @parts_of_speech ~w[adjective adverb noun verb] 
@@ -32,7 +34,7 @@ defmodule RandomWordService do
       # starts_with needs to be downcased to match words in lists
       validated_starts_with 
       |> String.downcase()
-      do_random_word(validated_part_of_speech)
+      |> do_random_word(validated_part_of_speech)
     else
       err -> err       
     end
@@ -68,7 +70,7 @@ defmodule RandomWordService do
   Catches all invalid parameters
   """
   def get_random_word(_) do
-    { :error, "Cannot use invalid options" }
+    { :error, "cannot use invalid options" }
   end
 
   @doc """
@@ -163,6 +165,7 @@ defmodule RandomWordService do
   end
 
   defp convert_to_struct(keyword_list) do
+    # make string keys into atoms
     map = keyword_list 
           |> Enum.into(%{})
           |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)
